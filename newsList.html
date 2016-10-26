@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="white" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="format-detection" content="telephone=no, address=no" />
+		<meta name="author" content="zhushunsheng" />
+		<title>资讯列表</title>
+		<script>
+			//rem适配方案
+			(function(minWidth, screenWidth, maxWidth) {
+				'use strict';
+
+				function screen() {
+					var Ehtml = document.getElementsByTagName('html')[0];
+					var documentWidth = document.documentElement.getBoundingClientRect().width;
+					if(documentWidth >= maxWidth) {
+						documentWidth = maxWidth;
+					}
+					if(documentWidth <= minWidth) {
+						documentWidth = minWidth;
+					}
+					Ehtml.style.fontSize = 100 * documentWidth / screenWidth + 'px';
+				}
+				screen();
+				window.onresize = screen;
+			})(320, 750, 768)
+		</script>
+		<style>
+			body,
+			p {
+				margin: 0;
+				padding: 0;
+			}
+			
+			body {
+				font-size: .24rem;
+				font-family: simhei;
+				background: #f7f8f9;
+			}
+			
+			.warpper {
+				width: 100%;
+				max-width: 768px;
+				margin: 0 auto;
+			}
+			
+			.card-news {
+				margin: .4rem .2rem;
+				border-radius: .1rem;
+				overflow: hidden;
+				background: #FFF;
+				box-shadow: 0 0 .05rem rgba(0, 0, 0, .5);
+			}
+			
+			.card-img {
+				width: 100%;
+				height: 3rem;
+				overflow: hidden;
+			}
+			
+			.card-img img {
+				width: 100%;
+				min-height: 3rem;
+			}
+			
+			.card-title {
+				padding: 0;
+				font-size: .36rem;
+				line-height: .54rem;
+				border-radius: 0 0 .1rem .1rem;
+				padding: .1rem;
+				color: #333;
+				text-align: justify;
+				word-break: break-all;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+			}
+			
+			.card-load {
+				margin: .4rem .2rem;
+				text-align: center;
+			}
+			
+			.loading {
+				display: inline-block;
+				text-indent: -999em;
+				position: relative;
+				width: 8px;
+				height: 8px;
+				background-color: rgba(0, 0, 0, .1);
+				box-shadow: -14px 0px 0px rgba(0, 0, 0, .2);
+				border-radius: 50%;
+				-webkit-animation: circle_classic 1s ease-in-out infinite alternate;
+				-moz-animation: circle_classic 1s ease-in-out infinite alternate;
+				animation: circle_classic 1s ease-in-out infinite alternate;
+			}
+			
+			@-webkit-keyframes circle_classic {
+				0% {
+					-webkit-transform: rotate(90deg);
+				}
+				100% {
+					-webkit-transform: rotate(450deg);
+				}
+			}
+			
+			@-moz-keyframes circle_classic {
+				0% {
+					-webkit-transform: rotate(90deg);
+				}
+				100% {
+					-webkit-transform: rotate(450deg);
+				}
+			}
+			
+			@keyframes circle_classic {
+				0% {
+					-webkit-transform: rotate(90deg);
+				}
+				100% {
+					-webkit-transform: rotate(450deg);
+				}
+			}
+		</style>
+		<script type="text/javascript" src="js/vue.min.js"></script>
+		<script type="text/javascript" src="js/vue-resource.js"></script>
+
+	</head>
+
+	<body>
+		<!--主体部分 -->
+		<div class="warpper" id="app">
+			<!-- card-->
+			<div class="card-news" v-for="item in list">
+				<div class="card-img">
+					<img :src="item.img" />
+				</div>
+				<div class="card-title">
+					<p>{{item.title}}</p>
+				</div>
+			</div>
+			<!--card-->
+
+			<div class="card-load">
+				<span class="loading"></span>
+			</div>
+
+		</div>
+		<!--主体部分end-->
+		<script>
+			var pullLoad = function(callback) {
+				window.onscroll = function() {
+					if(window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+						if(callback) {
+							callback();
+						}
+					}
+				}
+			}
+
+			var app = new Vue({
+				el: "#app",
+				data: {
+					page: {},
+					list: [],
+					current: 0
+				},
+				ready: function() {
+					var _this = this;
+					this.getData(++this.current);
+					window.pullLoad(function() {
+						console.log(_this.page.total);
+						if(_this.current < Math.ceil(_this.page.total)) {
+							_this.getData(++_this.current);
+						}
+
+					})
+				},
+				methods: {
+					//ajax
+					$ajax: function(option, callback, error) {
+						this.$http(option).then(function(res) {
+							callback(res.data);
+						}).error(function() {
+							error();
+						})
+					},
+
+					//获取数据
+					getData: function(current) {
+						var _this = this;
+						this.$ajax({
+							url: "http://120.27.137.16/wangda/news/queryAll.action",
+							method: "get",
+							data: {
+								"page": current,
+								"rows": 10
+							}
+						}, function(res) {
+							_this.page = res;
+							setTimeout(function() {
+								_this.list = _this.list.concat(_this.page.rows);
+							}, 1000);
+						})
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

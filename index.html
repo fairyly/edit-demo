@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>editdemo</title>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="white" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="css/simditor.css" />
+		<style>
+			body {
+				padding: 0;
+				margin: 0;
+				font-family: "microsoft yahei";
+				background: #FFF;
+			}
+			
+			p {
+				margin: 0;
+				padding: 0;
+			}
+			
+			input,
+			button {
+				font-family: "microsoft yahei";
+			}
+			
+			.header {
+				width: 100%;
+				height: 80px;
+				background: #FFF;
+				border-bottom: 1px solid #EEE;
+			}
+			
+			.header-content {
+				width: 100%;
+				margin: 0 auto;
+				max-width: 700px;
+				padding: 25px 0;
+			}
+			
+			.header-title {
+				font-size: 20px;
+				line-height: 30px;
+				color: #999;
+			}
+			
+			.btn-put {
+				width: 100px;
+				height: 30px;
+				float: right;
+				box-sizing: border-box;
+				border: 2px solid #CCC;
+				border-radius: 4px;
+				background: #FFF;
+				outline: none;
+				color: #999;
+				cursor: pointer;
+				-webkit-transition: all .2s ease;
+				transition: all .2s ease;
+			}
+			
+			.btn-put:hover {
+				border: 2px solid #4298BA;
+				color: #4298BA;
+			}
+			
+			.edit-warp {
+				margin: 0 auto;
+				max-width: 700px;
+				width: 100%;
+			}
+			
+			.edit-img-warp {
+				padding: 10px 0;
+			}
+			
+			.edit-img {
+				width: 100%;
+				height: 200px;
+				background: #f7f8f9;
+				color: #CCC;
+				text-align: center;
+				cursor: pointer;
+			}
+			
+			.edit-img input[type="file"] {
+				width: 100%;
+				height: 100%;
+				outline: none;
+				opacity: 0;
+				cursor: pointer;
+			}
+			
+			.edit-title {
+				height: 60px;
+				width: 100%;
+				outline: none;
+				border: none;
+				border-bottom: 1px solid #EEE;
+				border-radius: 0;
+				font-size: 20px;
+				box-sizing: border-box;
+			}
+			
+			.simditor {
+				border: none;
+			}
+			
+			.simditor .simditor-toolbar {
+				border-bottom: none;
+			}
+			
+			.simditor .simditor-toolbar> ul {
+				padding: 0;
+			}
+			
+			.simditor .simditor-body,
+			.edit-style {
+				font-family: "microsoft yahei";
+			}
+			
+			.simditor .simditor-wrapper .simditor-placeholder {
+				font-family: "microsoft yahei";
+			}
+			
+			.simditor .simditor-toolbar> ul> li> .toolbar-item {
+				color: #333;
+			}
+		</style>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/module.min.js"></script>
+		<script type="text/javascript" src="js/hotkeys.min.js"></script>
+		<script type="text/javascript" src="js/uploader.min.js"></script>
+		<script type="text/javascript" src="js/simditor.min.js"></script>
+
+	</head>
+
+	<body>
+		<div class="header">
+			<div class="header-content">
+				<span class="header-title">写文章</span>
+				<button class="btn-put">发布</button>
+			</div>
+		</div>
+		<div class="edit-warp">
+			<div class="edit-img-warp">
+				<div class="edit-img">
+					<input type="file" accept="image/*" />
+				</div>
+			</div>
+
+			<input class="edit-title" type="text" placeholder="这里输入标题" autofocus/>
+			<textarea id="edit" placeholder="在这编辑内容"></textarea>
+		</div>
+
+		<script>
+			var editor = new Simditor({
+				textarea: $('#edit'),
+				toolbar: ['bold', 'strikethrough', 'blockquote', 'code', 'link', 'image', ],
+				pasteImage: true,
+				upload: true,
+				upload: {
+					url: '', //文件上传的接口地址
+					params: null, //键值对,指定文件上传接口的额外参数,上传的时候随文件一起提交
+					fileKey: 'imgfile', //服务器端获取文件数据的参数名
+					connectionCount: 3,
+					leaveConfirm: '正在上传文件'
+				},
+
+			});
+		</script>
+	</body>
+
+</html>
